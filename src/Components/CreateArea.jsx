@@ -27,9 +27,11 @@ function CreateArea(props){
     }
 
     function handleOnSubmit(event){
-        axios.post('http://localhost:5000/notes/add', inputText)
-            .then(res => console.log("note added"));
-        props.handleChange(inputText)
+        axios.post('https://keeperapp008.herokuapp.com/notes/add', inputText)
+            .then(res => {
+                props.handleChange();
+                console.log("note added")
+            });
         event.preventDefault();
         setInputText({
             title:"",

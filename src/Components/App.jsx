@@ -4,33 +4,41 @@ import Heading from "./Heading"
 import CreateArea from "./CreateArea"
 import Content from "./Content"
 import Footer from "./Footer"
-import { SettingsInputAntennaTwoTone } from "@material-ui/icons"
 
 function App(){
     const [notes,setNotes] = React.useState([]);
+    const [alert,setAlert] = React.useState(true);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/notes/")
-        .then (res => {
-            setNotes(res.data);
-            //console.log(notes);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    },[notes.length])
+        if(!alert){
+            return;
+        }
+        axios.get("https://keeperapp008.herokuapp.com/notes/")
+            .then (res => {
+                setNotes(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    },[alert])
 
-    function handleChange(newNote){
-        setNotes(prevValue=>[...prevValue,newNote]);
+    useEffect(() => {
+        if(alert){
+            setAlert(false);
+        }
+    },[alert])
+
+    function handleChange(){
+        setAlert(true);
     }
 
     function deleteItem(id)
     {
-        axios.delete('http://localhost:5000/notes/'+id)
-            .then(response => { console.log("deleted")})
-        setNotes(prevValue=>
-            prevValue.filter(item=>(item._id!==id))
-        )
+        axios.delete('https://keeperapp008.herokuapp.com/notes/'+id)
+            .then(() => {
+                setAlert(true); 
+                console.log("deleted");
+            })
     }
 
     return (
